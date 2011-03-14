@@ -1,0 +1,43 @@
+<project name="Logger Library Ant Script" default="logger-library" basedir="." >
+
+	<property name="FLEX_HOME" value="/Applications/Adobe Flash Builder 4/sdks/3.5.0"/>
+	<property name="SRC_DIR" value="${basedir}/src"/>
+	<property name="DEPLOY_DIR" value="${basedir}/deploy"/>
+	<property name="OUTPUT_SWC" value="${DEPLOY_DIR}/logger.swc"/>
+   
+	<taskdef resource="flexTasks.tasks"
+			classpath="${FLEX_HOME}/ant/lib/flexTasks.jar" />
+	
+	<target name="logger-library" depends="clean">
+		<!-- create the build directory -->
+		<mkdir dir="${DEPLOY_DIR}"/>
+		
+		<property name="config" value="${DEPLOY_DIR}/config.xml" />
+				
+		<!-- Generate the config file. -->
+		<xslt in=".flexLibProperties" out="${config}" style="config.xsl" />
+		
+		<compc 
+			output="${OUTPUT_SWC}"
+			allow-source-path-overlap="true"
+			headless-server="true"
+			warn-no-constructor="false">
+			
+			<!-- Config file. -->
+			<load-config filename="${config}" />
+			
+			<source-path path-element="${SRC_DIR}" />
+			
+			<!-- List of SWC files or directories that contain SWC files. -->
+			<external-library-path dir="${FLEX_HOME}/frameworks/libs" append="true">
+				<include name="**/*.swc" />
+			</external-library-path>
+		</compc>
+		
+		<delete file="${config}" />
+	</target>
+   
+	<target name="clean">
+		<delete dir="${DEPLOY_DIR}"/>
+	</target>
+</project>
