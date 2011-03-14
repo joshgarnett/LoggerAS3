@@ -1,12 +1,15 @@
 <project name="Logger Library" default="logger-library" basedir="." >
 
-	<property name="FLEX_HOME" value="/Applications/Adobe Flash Builder 4/sdks/3.5.0"/>
+	<property name="FLEX_HOME" value="/opt/flex_3.5_sdk"/>
 	<property name="SRC_DIR" value="${basedir}/src"/>
 	<property name="DEPLOY_DIR" value="${basedir}/deploy"/>
+	<property name="ASDOC_DIR" value="${basedir}/docs"/>
 	<property name="OUTPUT_SWC" value="${DEPLOY_DIR}/logger.swc"/>
    
 	<taskdef resource="flexTasks.tasks"
 			classpath="${FLEX_HOME}/ant/lib/flexTasks.jar" />
+	
+	<target name="all" depends="logger-library,docs" />
 	
 	<target name="logger-library" depends="clean">
 		<!-- create the build directory -->
@@ -39,5 +42,17 @@
    
 	<target name="clean">
 		<delete dir="${DEPLOY_DIR}"/>
+		<delete dir="${ASDOC_DIR}"/>
 	</target>
+	
+	<target name="docs"> 
+		<exec executable="${FLEX_HOME}/bin/asdoc" failonerror="true">
+			<arg line="-source-path '${SRC_DIR}'" />
+			<arg line="-doc-sources '${SRC_DIR}'" />
+			<arg line="-main-title 'Logger Documentation'" />
+			<arg line="-window-title 'Logger Documentation'" />
+			<arg line="-output '${ASDOC_DIR}'" />
+		</exec>
+	</target>
+
 </project>

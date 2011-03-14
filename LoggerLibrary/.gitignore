@@ -4,3 +4,6 @@
 deploy
 deploy/*
 deploy/**/*
+docs
+docs/*
+docs/**/*
