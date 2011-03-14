@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<flexLibProperties includeAllClasses="false" version="3">
+  <includeClasses>
+    <classEntry path="com.adverserealms.log.Logger"/>
+    <classEntry path="com.adverserealms.log.logger.Level"/>
+    <classEntry path="com.adverserealms.log.logger.LogChannel"/>
+    <classEntry path="com.adverserealms.log.logger.LogConfig"/>
+    <classEntry path="com.adverserealms.log.logger.LogEntry"/>
+    <classEntry path="com.adverserealms.log.logger.LogTimestamp"/>
+  </includeClasses>
+  <includeResources/>
+  <namespaceManifests/>
+</flexLibProperties>
