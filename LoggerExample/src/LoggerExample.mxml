@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" 
+				pageTitle="Logger Example"
+				layout="vertical" 
+				width="100%" height="100%"
+				backgroundColor="#ffffff"
+				verticalGap="10"
+				creationComplete="creationCompleteHandler(event)"
+				applicationComplete="applicationCompleteHandler(event)">
+	
+	<mx:Script>
+		<![CDATA[
+			import com.adverserealms.example.LogWindow;
+			import com.adverserealms.log.Logger;
+			import com.adverserealms.log.logger.Level;
+			import com.adverserealms.log.logger.LogConfig;
+			
+			import mx.events.FlexEvent;
+			import mx.managers.PopUpManager;
+			
+			/**
+			 * Mock up a constant variable for managing different deployments.  Ideally this could
+			 * be updated at compile time or passed in as a parameter to the swf.
+			 */
+			public static const ENVIRONMENT:String = "development";
+			
+			/**
+			 * Creates the LogWindow and centers it.
+			 */
+			private function displayLogWindow() : void 
+			{
+				Logger.debug("Opening LogWindow");
+				
+				var window:LogWindow = new LogWindow();
+				PopUpManager.addPopUp(window, Application.application.root, false) as LogWindow;
+				PopUpManager.centerPopUp(window);
+			}
+
+			private function creationCompleteHandler(event:FlexEvent) : void
+			{
+				Logger.debug("creationCompleteHandler called");
+			}
+
+
+			private function applicationCompleteHandler(event:FlexEvent) : void
+			{
+				Logger.debug("applicationCompleteHandler called");
+					
+				if(ENVIRONMENT == "development") {
+					//add a keyboard listener to display the LogWindow
+					stage.addEventListener(KeyboardEvent.KEY_DOWN, stageKeyDown);
+				}
+				else {
+					//ignore non-error log messages in a non-development environment
+					LogConfig.LOG_LEVEL = Level.ERROR;
+				}
+			}
+			
+			private function stageKeyDown(event:KeyboardEvent) : void 
+			{
+				Logger.debug("stageKeyDown: key: "+event.charCode);
+				
+				if(event.shiftKey && event.charCode == 124) {
+					//Shift + \ opens the LogWindow
+					displayLogWindow();
+				}
+			}
+
+		]]>
+	</mx:Script>
+	
+	<mx:Style>
+		Button {
+			button-height: 26px;
+			font-size: 12;
+		}
+	</mx:Style>
+	
+	<mx:Button label="Display Log Window" click="displayLogWindow();" width="200" />
+	
+	<mx:Button label="Add Debug Message" click="Logger.debug('new debug message')" width="200" />
+	
+	<mx:Button label="Add Info Message" click="Logger.info('new info message')" width="200" />
+	
+	<mx:Button label="Add Warn Message" click="Logger.warn('new warn message')" width="200" />
+	
+	<mx:Button label="Add Error Message" click="Logger.error('new error message')" width="200" />
+	
+	<mx:Button label="Add Fatal Message" click="Logger.fatal('new fatal message')" width="200" />
+</mx:Application>

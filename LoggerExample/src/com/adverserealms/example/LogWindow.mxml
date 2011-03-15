@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" 
+		layout="vertical" 
+		title="Log Window"
+		width="600"
+		height="400"
+		showCloseButton="true" 
+		paddingTop="5" paddingBottom="5"
+		close="closeWindow()">
+	
+	<mx:Script>
+		<![CDATA[		
+			import com.adverserealms.log.Logger;
+			import com.adverserealms.log.logger.LogConfig;
+			
+			import mx.managers.PopUpManager;
+			
+			private function clearLogs() : void {
+				Logger.clear();
+			}
+			
+			private function copyLogs() : void {
+				System.setClipboard(Logger.text);
+			}
+			
+			private function toggleTimeStamp(event:Event) : void {
+				var show:Boolean = event.target.selected;
+				Logger.toggleTimeStamps(show);
+			}
+			
+			private function toggleChannel(event:Event) : void {
+				var show:Boolean = event.target.selected;
+				Logger.toggleChannels(show);
+			}
+			
+			private function closeWindow() : void {
+				PopUpManager.removePopUp(this);
+			}
+		]]>
+	</mx:Script>
+	
+	<mx:VBox width="100%" height="100%" paddingBottom="0" paddingLeft="5" paddingRight="5" paddingTop="5">
+		
+		<mx:HBox width="100%" horizontalGap="20">
+			<mx:Button label="Clear Logs" click="clearLogs();" width="125"/>
+			
+			<mx:Button label="Copy Logs" click="copyLogs();" width="125"/>
+			
+			<mx:CheckBox label="Show Timestamp" selected="{LogConfig.SHOW_TIMESTAMP}" click="toggleTimeStamp(event)"/>
+			
+			<mx:CheckBox label="Show Channel" selected="{LogConfig.SHOW_CHANNEL_NAME}" click="toggleChannel(event)"/>      
+		</mx:HBox>
+		
+		<mx:HBox width="100%" height="100%" paddingBottom="0" paddingLeft="0" paddingRight="0" paddingTop="0">
+			<mx:TextArea width="100%" height="100%" text="{Logger.text}" 
+			 		backgroundColor="#FFFFFF" 
+					focusAlpha="0" editable="false" color="#000000" 
+					fontFamily="Courier" fontSize="12"/>
+		</mx:HBox>		
+	</mx:VBox>	
+</mx:TitleWindow>

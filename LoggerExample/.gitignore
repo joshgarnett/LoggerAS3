@@ -1,0 +1,6 @@
+.settings
+.settings/*
+.settings/**/*
+bin-debug
+bin-debug/*
+bing-debug/**/*
