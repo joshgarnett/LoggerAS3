@@ -6,7 +6,8 @@
 		height="400"
 		showCloseButton="true" 
 		paddingTop="5" paddingBottom="5"
-		close="closeWindow()">
+		close="closeWindow()"
+		creationComplete="onCreationComplete()">
 	
 	<mx:Script>
 		<![CDATA[		
@@ -15,12 +16,24 @@
 			
 			import mx.managers.PopUpManager;
 			
+			[Bindable] private var text:String = "";
+			
+			private function onCreationComplete(): void {
+				var logger:Logger = Logger.getInstance();
+				text = logger.text;
+				logger.addEventListener("logUpdated", onLogUpdated);
+			}
+			
+			private function onLogUpdated(event:Event) : void {
+				text = Logger.getInstance().text;
+			}
+			
 			private function clearLogs() : void {
 				Logger.clear();
 			}
 			
 			private function copyLogs() : void {
-				System.setClipboard(Logger.text);
+				System.setClipboard(Logger.getInstance().text);
 			}
 			
 			private function toggleTimeStamp(event:Event) : void {
@@ -52,7 +65,7 @@
 		</mx:HBox>
 		
 		<mx:HBox width="100%" height="100%" paddingBottom="0" paddingLeft="0" paddingRight="0" paddingTop="0">
-			<mx:TextArea width="100%" height="100%" text="{Logger.text}" 
+			<mx:TextArea width="100%" height="100%" text="{text}" 
 			 		backgroundColor="#FFFFFF" 
 					focusAlpha="0" editable="false" color="#000000" 
 					fontFamily="Courier" fontSize="12"/>

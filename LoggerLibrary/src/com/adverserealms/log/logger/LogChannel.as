@@ -31,6 +31,7 @@ package com.adverserealms.log.logger
         public static const WARN    :LogChannel = new LogChannel("Warn",	Level.WARN);
         public static const ERROR   :LogChannel = new LogChannel("Error",	Level.ERROR);
         public static const FATAL   :LogChannel = new LogChannel("Fatal",	Level.FATAL);
+		public static const CONSOLE :LogChannel = new LogChannel("Console",	Level.CONSOLE);
         
 		private var _name:String;
 		private var _level:Number;

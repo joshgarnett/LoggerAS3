@@ -23,19 +23,45 @@ package com.adverserealms.log
 {
 	import com.adverserealms.log.logger.*;
 	
+	import flash.events.Event;
+	import flash.events.EventDispatcher;
+	
+	/**
+	 * Dispatched when the log text has been updated
+	 */
+	[Event(name="logUpdated", type="flash.events.Event")]
+	
 	/**
 	 * This is the main class that should be used for creating log messages.  Output options
 	 * can be configured in the LogConfig class.
 	 * 
 	 * @see com.adverserealms.log.logger.LogConfig
 	 */
-	[Bindable]
-    public class Logger
+    public class Logger extends EventDispatcher
     {
+		private static var _instance:Logger = Logger.getInstance();
+		
+		public function Logger() : void {
+			if(_instance != null) {
+				throw new Error("Error: Use Logger.getInstance() instead");
+			}
+		}
+		
+		public static function getInstance() : Logger {
+			if(_instance == null) {
+				_instance = new Logger();
+			}
+			return _instance;
+		}
+		
         /**
 		 * Text output of all LogEntries
 		 */
-        public static var text:String = "";
+        public var text:String = "";
+		
+		public function updatedText() : void {
+			dispatchEvent(new Event("logUpdated"));
+		}
 		
 		/**
 		 * Array of LogEntries
@@ -49,7 +75,9 @@ package com.adverserealms.log
 		 */
         public static function debug(msg:String):void
         {
-            log(msg, LogChannel.DEBUG);
+			CONFIG::debug {
+        		log(msg, LogChannel.DEBUG);
+			}
         }
 		
 		/**
@@ -59,7 +87,9 @@ package com.adverserealms.log
 		 */
 		public static function info(msg:String):void
 		{
-			log(msg, LogChannel.INFO);
+			CONFIG::debug {
+				log(msg, LogChannel.INFO);
+			}
 		}
         
 		/**
@@ -69,7 +99,9 @@ package com.adverserealms.log
 		 */
 		public static function warn(msg:String):void
 		{
-			log(msg, LogChannel.WARN);
+			CONFIG::debug {
+				log(msg, LogChannel.WARN);
+			}
 		}
 		
 		/**
@@ -79,7 +111,9 @@ package com.adverserealms.log
 		 */
         public static function error(msg:String):void
         {
-            log(msg, LogChannel.ERROR);
+			CONFIG::debug {
+            	log(msg, LogChannel.ERROR);
+			}
         }
         
 		/**
@@ -89,7 +123,22 @@ package com.adverserealms.log
 		 */
 		public static function fatal(msg:String):void
 		{
-			log(msg, LogChannel.FATAL);
+			CONFIG::debug {
+				log(msg, LogChannel.FATAL);
+			}
+		}
+		
+		/**
+		 * Adds a console log message.
+		 *
+		 * @param msg The log message.
+		 */
+		public static function console(msg:String):void
+		{
+			CONFIG::debug
+			{
+				log(msg, LogChannel.CONSOLE);
+			}
 		}
 		
 		/**
@@ -97,8 +146,9 @@ package com.adverserealms.log
 		 */
 		public static function clear():void
 		{
-			text = "";
+			_instance.text = "";
 			_log = new Array();
+			updateLogText();
 		}
 		
 		/**
@@ -148,6 +198,8 @@ package com.adverserealms.log
             {
                 trace(entry.toLog());
             }
+			
+			_instance.updatedText();
         }
 		
         /**
@@ -155,12 +207,14 @@ package com.adverserealms.log
          * been changed so that the output is correct
          */ 
         private static function updateLogText() : void {
-            text = "";
+            _instance.text = "";
             
             for(var i:Number = 0; i < _log.length; i++) {
             	var entry:LogEntry = _log[i] as LogEntry;
             	updateOutput(entry);
             }
+			
+			_instance.updatedText();
         }
         
 		/**
@@ -172,11 +226,11 @@ package com.adverserealms.log
         	
             if(LogConfig.REVERSE_ORDER)
             {
-                text = log + "\n" + text;
+				_instance.text = log + "\n" + _instance.text;
             }
             else
             {
-                text += "\n" + log;
+				_instance.text += "\n" + log;
             }
         }
     }

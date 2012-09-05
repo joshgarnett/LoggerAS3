@@ -21,7 +21,6 @@
  */
 package com.adverserealms.log.logger
 {
-    [Bindable]
     public class LogConfig
     {
         /**
@@ -47,7 +46,7 @@ package com.adverserealms.log.logger
         /**
          * Toggle to determine which way logs are displayed
          */
-        public static var REVERSE_ORDER:Boolean = true;
+        public static var REVERSE_ORDER:Boolean = false;
         
         /**
          * Set the level of logs that are displayed in the system
